@@ -1,0 +1,27 @@
+# Changes here will be overwritten by Copier. NEVER EDIT MANUALLY
+# See: https://copier.readthedocs.io/en/stable/configuring/#the-copier-answersyml-file
+_commit: v0.1.12
+_src_path: gh:hexdoc-dev/hexdoc-hexcasting-template
+author: miyucomics
+book_id: hexcasting:thehexbook
+default_branch: main
+github_repo: cleanstate
+gradle_mod_version_key: mod_version
+hexdoc_mod_plugin_classname: CleanslateModPlugin
+hexdoc_plugin_classname: CleanslatePlugin
+java_lang:
+    ext: kt
+    src: kotlin
+java_package: miyucomics/cleanslate
+mod_display_name: Clean Slate
+modid: cleanslate
+multiloader: false
+package_export_root: doc/src/hexdoc_cleanslate/_export
+package_name: hexdoc-cleanslate
+package_slug: hexdoc_cleanslate
+package_src: doc/src/hexdoc_cleanslate
+pages_url: https://miyucomics.github.io/cleanstate/
+pattern_regex:
+    per_world_value: 'true'
+    regex: make\(\s*"(?P<name>[a-zA-Z0-9_\/]+)",\s*(?:new )?(?:ActionRegistryEntry|OperationAction)\(\s*HexPattern\.fromAngles\(\s*"(?P<signature>[aqweds]+)",\s*HexDir.(?P<startdir>\w+)\)
+pattern_registry: registry/CleanslatePatternRegistry.kt

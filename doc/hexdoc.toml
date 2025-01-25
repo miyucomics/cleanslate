@@ -1,0 +1,34 @@
+modid = "cleanslate"
+book = "hexcasting:thehexbook"
+default_lang = "en_us"
+default_branch = "main"
+
+resource_dirs = [
+    "resources",
+    "{_common.src}/main/resources",
+    "{_common.src}/main/generated",
+    { modid="hexcasting" },
+    { modid="minecraft" },
+    { modid="hexdoc" }
+]
+export_dir = "src/hexdoc_cleanslate/_export/generated"
+
+[template]
+icon = "icon.png"
+include = [
+    "cleanslate",
+    "hexcasting",
+    "hexdoc",
+]
+
+[template.args]
+mod_name = "Clean Slate"
+author = "miyucomics"
+show_landing_text = false
+
+[extra.hexcasting]
+pattern_stubs = []
+
+[_common]
+src = "../src"
+package = "{src}/main/java/miyucomics/cleanslate"

@@ -3,7 +3,8 @@
 	"ingredients": [
 		{
 			"item": "hexcasting:slate"
-		}, {
+		},
+		{
 			"item": "minecraft:wither_rose"
 		}
 	],
