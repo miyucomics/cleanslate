@@ -8,8 +8,8 @@
 		"miyucomics"
 	],
 	"contact": {
-		"homepage": "https://miyucomics.github.io/cleanslate",
-		"sources": "https://github.com/miyucomics/cleanslate"
+		"homepage": "https://miyucomics.github.io/clean-slate",
+		"sources": "https://github.com/miyucomics/clean-slate"
 	},
 	"license": "MIT",
 	"icon": "assets/cleanslate/icon.png",

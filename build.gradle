@@ -53,7 +53,9 @@ processResources {
 }
 
 fabricApi {
-	configureDataGeneration()
+	configureDataGeneration() {
+		modId = "cleanslate"
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {
