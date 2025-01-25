@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "cleanslate",
+	"version": "${version}",
+	"name": "Clean Slate",
+	"description": "An addon that hopes to make spell circles more aesthetic and fun to work with!",
+	"authors": [
+		"miyucomics"
+	],
+	"contact": {
+		"homepage": "https://miyucomics.github.io/cleanslate",
+		"sources": "https://github.com/miyucomics/cleanslate"
+	},
+	"license": "MIT",
+	"icon": "assets/cleanslate/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-datagen": [
+			{
+				"adapter": "kotlin",
+				"value": "miyucomics.cleanslate.CleanslateDatagen"
+			}
+		],
+		"main": [
+			{
+				"adapter": "kotlin",
+				"value": "miyucomics.cleanslate.CleanslateMain"
+			}
+		]
+	},
+	"mixins": [
+		"cleanslate.mixins.json"
+	],
+	"depends": {
+		"minecraft": "1.20.1",
+		"fabricloader": ">=0.16.7",
+		"fabric-api": "*",
+		"fabric-language-kotlin": ">=1.10.10+kotlin.1.9.10",
+		"hexcasting": ">=0.11.1-7-pre-646"
+	}
+}

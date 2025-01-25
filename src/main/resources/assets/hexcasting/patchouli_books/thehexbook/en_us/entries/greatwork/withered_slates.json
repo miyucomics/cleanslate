@@ -1,0 +1,18 @@
+{
+	"name": "cleanslate.page.withered_slates.title",
+	"icon": "cleanslate:withered_slate",
+	"advancement": "hexcasting:enlightenment",
+	"category": "hexcasting:greatwork",
+	"sortnum": 4,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "cleanslate.page.withered_slates.0"
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "cleanslate:withered_slate",
+			"text": "cleanslate.page.withered_slates.1"
+		}
+	]
+}

@@ -1,0 +1,13 @@
+{
+	"name": "cleanslate.page.flat_impeti.title",
+	"icon": "cleanslate:flat_looking_impetus",
+	"advancement": "hexcasting:enlightenment",
+	"category": "hexcasting:greatwork",
+	"sortnum": 4,
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "cleanslate.page.flat_impeti.0"
+		}
+	]
+}
