@@ -36,32 +36,38 @@ public abstract class BlockItemMixin {
 			if (currentBlockState.isOf(HexBlocks.SLATE)) {
 				BlockState newBlockState = CleanslateBlocks.MULTISLATE_BLOCK.getDefaultState().with(BlockSlate.WATERLOGGED, currentBlockState.get(BlockSlate.WATERLOGGED));
 				MultifaceGrowthBlock growth = (MultifaceGrowthBlock) newBlockState.getBlock();
+
+				Direction excludeDirection = null;
+				BlockState finalBlock = null;
+
 				switch (currentBlockState.get(BlockSlate.ATTACH_FACE)) {
 					case CEILING -> {
-						BlockState finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, Direction.UP);
-						if (finalBlock == null) {
-							cir.setReturnValue(null);
-							return;
-						}
-						cir.setReturnValue(Arrays.stream(context.getPlacementDirections()).map(direction -> finalBlock.with(MultifaceGrowthBlock.getProperty(direction), true)).filter(Objects::nonNull).findFirst().orElse(null));
+						excludeDirection = Direction.UP;
+						finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, Direction.UP);
 					}
 					case FLOOR -> {
-						BlockState finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, Direction.DOWN);
-						if (finalBlock == null) {
-							cir.setReturnValue(null);
-							return;
-						}
-						cir.setReturnValue(Arrays.stream(context.getPlacementDirections()).map(direction -> finalBlock.with(MultifaceGrowthBlock.getProperty(direction), true)).filter(Objects::nonNull).findFirst().orElse(null));
+						excludeDirection = Direction.DOWN;
+						finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, Direction.DOWN);
 					}
 					case WALL -> {
-						BlockState finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, currentBlockState.get(BlockSlate.FACING).getOpposite());
-						if (finalBlock == null) {
-							cir.setReturnValue(null);
-							return;
-						}
-						cir.setReturnValue(Arrays.stream(context.getPlacementDirections()).map(direction -> finalBlock.with(MultifaceGrowthBlock.getProperty(direction), true)).filter(Objects::nonNull).findFirst().orElse(null));
+						excludeDirection = currentBlockState.get(BlockSlate.FACING).getOpposite();
+						finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, excludeDirection);
 					}
-				};
+				}
+
+				if (finalBlock == null) {
+					cir.setReturnValue(null);
+					return;
+				}
+
+				Direction finalExcludeDirection = excludeDirection;
+				BlockState finalBlock1 = finalBlock;
+				cir.setReturnValue(Arrays.stream(context.getPlacementDirections())
+						.filter(direction -> direction != finalExcludeDirection)
+						.map(direction -> ((MultifaceGrowthBlock) finalBlock1.getBlock()).withDirection(finalBlock1, world, blockPos, direction))
+						.filter(Objects::nonNull)
+						.findFirst()
+						.orElse(null));
 			} else if (currentBlockState.isOf(CleanslateBlocks.MULTISLATE_BLOCK)) {
 				cir.setReturnValue(Arrays.stream(context.getPlacementDirections()).map(direction -> currentBlockState.with(MultifaceGrowthBlock.getProperty(direction), true)).filter(Objects::nonNull).findFirst().orElse(null));
 			}

@@ -6,6 +6,7 @@ import at.petrak.hexcasting.api.casting.circles.ICircleComponent.ControlFlow
 import at.petrak.hexcasting.api.casting.eval.env.CircleCastEnv
 import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
 import at.petrak.hexcasting.common.lib.HexItems
+import com.mojang.datafixers.util.Pair
 import net.minecraft.block.*
 import net.minecraft.fluid.FluidState
 import net.minecraft.fluid.Fluids
@@ -57,37 +58,39 @@ class MultislateBlock : MultifaceGrowthBlock(Settings.copy(Blocks.DEEPSLATE_TILE
 		return ControlFlow.Continue(image, exits.map { dir -> exitPositionFromDirection(pos, dir) })
 	}
 
+	private fun getOtherAxises(direction: Direction): List<Direction> {
+		val other = mutableListOf<Direction>()
+		when (direction.axis) {
+			Direction.Axis.X -> {
+				other.add(Direction.UP)
+				other.add(Direction.DOWN)
+				other.add(Direction.NORTH)
+				other.add(Direction.SOUTH)
+			}
+			Direction.Axis.Y -> {
+				other.add(Direction.WEST)
+				other.add(Direction.EAST)
+				other.add(Direction.NORTH)
+				other.add(Direction.SOUTH)
+			}
+			Direction.Axis.Z -> {
+				other.add(Direction.WEST)
+				other.add(Direction.EAST)
+				other.add(Direction.UP)
+				other.add(Direction.DOWN)
+			}
+			null -> throw IllegalStateException()
+		}
+		return other
+	}
+
 	override fun canEnterFromDirection(enterDir: Direction, pos: BlockPos, state: BlockState, world: ServerWorld): Boolean {
 		return true;
 	}
 
 	override fun possibleExitDirections(pos: BlockPos, state: BlockState, world: World): EnumSet<Direction> {
 		val exits = EnumSet.noneOf(Direction::class.java)
-
-		Direction.stream().filter { hasDirection(state, it) }.forEach { dir ->
-			when (dir.axis) {
-				Direction.Axis.X -> {
-					exits.add(Direction.UP)
-					exits.add(Direction.DOWN)
-					exits.add(Direction.NORTH)
-					exits.add(Direction.SOUTH)
-				}
-				Direction.Axis.Y -> {
-					exits.add(Direction.WEST)
-					exits.add(Direction.EAST)
-					exits.add(Direction.NORTH)
-					exits.add(Direction.SOUTH)
-				}
-				Direction.Axis.Z -> {
-					exits.add(Direction.WEST)
-					exits.add(Direction.EAST)
-					exits.add(Direction.UP)
-					exits.add(Direction.DOWN)
-				}
-				null -> throw IllegalStateException()
-			}
-		}
-
+		Direction.stream().filter { hasDirection(state, it) }.forEach { dir -> exits.addAll(getOtherAxises(dir)) }
 		return exits
 	}
 

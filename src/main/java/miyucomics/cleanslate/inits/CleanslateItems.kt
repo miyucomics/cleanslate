@@ -11,7 +11,7 @@ import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKey
 
 object CleanslateItems {
-	private val WITHERED_SLATE = BlockItem(CleanslateBlocks.WITHERED_SLATE_BLOCK, Settings())
+	val WITHERED_SLATE = BlockItem(CleanslateBlocks.WITHERED_SLATE_BLOCK, Settings())
 	@JvmField val FLAT_LOOKING_IMPETUS = BlockItem(CleanslateBlocks.FLAT_LOOKING_IMPETUS_BLOCK, Settings())
 	@JvmField val FLAT_REDSTONE_IMPETUS = BlockItem(CleanslateBlocks.FLAT_REDSTONE_IMPETUS_BLOCK, Settings())
 	@JvmField val FLAT_RIGHT_CLICK_IMPETUS = BlockItem(CleanslateBlocks.FLAT_RIGHT_CLICK_IMPETUS_BLOCK, Settings())
