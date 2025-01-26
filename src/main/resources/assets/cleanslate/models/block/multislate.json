@@ -1,5 +1,4 @@
 {
-	"ambientocclusion": false,
 	"textures": {
 		"0": "hexcasting:block/slate",
 		"particle": "hexcasting:block/slate"

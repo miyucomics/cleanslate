@@ -3,6 +3,7 @@ package miyucomics.cleanslate.mixin;
 import at.petrak.hexcasting.common.blocks.circles.BlockSlate;
 import at.petrak.hexcasting.common.items.storage.ItemSlate;
 import at.petrak.hexcasting.common.lib.HexBlocks;
+import miyucomics.cleanslate.blocks.MultislateBlock;
 import miyucomics.cleanslate.inits.CleanslateBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -33,20 +34,31 @@ public abstract class BlockItemMixin {
 			BlockState currentBlockState = world.getBlockState(blockPos);
 
 			if (currentBlockState.isOf(HexBlocks.SLATE)) {
-				BlockState newBlockState = CleanslateBlocks.MULTISLATE_BLOCK.getDefaultState();
+				BlockState newBlockState = CleanslateBlocks.MULTISLATE_BLOCK.getDefaultState().with(BlockSlate.WATERLOGGED, currentBlockState.get(BlockSlate.WATERLOGGED));
 				MultifaceGrowthBlock growth = (MultifaceGrowthBlock) newBlockState.getBlock();
-				System.out.println(currentBlockState.get(BlockSlate.ATTACH_FACE));
 				switch (currentBlockState.get(BlockSlate.ATTACH_FACE)) {
 					case CEILING -> {
 						BlockState finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, Direction.UP);
+						if (finalBlock == null) {
+							cir.setReturnValue(null);
+							return;
+						}
 						cir.setReturnValue(Arrays.stream(context.getPlacementDirections()).map(direction -> finalBlock.with(MultifaceGrowthBlock.getProperty(direction), true)).filter(Objects::nonNull).findFirst().orElse(null));
 					}
 					case FLOOR -> {
 						BlockState finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, Direction.DOWN);
+						if (finalBlock == null) {
+							cir.setReturnValue(null);
+							return;
+						}
 						cir.setReturnValue(Arrays.stream(context.getPlacementDirections()).map(direction -> finalBlock.with(MultifaceGrowthBlock.getProperty(direction), true)).filter(Objects::nonNull).findFirst().orElse(null));
 					}
 					case WALL -> {
 						BlockState finalBlock = growth.withDirection(newBlockState, context.getWorld(), blockPos, currentBlockState.get(BlockSlate.FACING).getOpposite());
+						if (finalBlock == null) {
+							cir.setReturnValue(null);
+							return;
+						}
 						cir.setReturnValue(Arrays.stream(context.getPlacementDirections()).map(direction -> finalBlock.with(MultifaceGrowthBlock.getProperty(direction), true)).filter(Objects::nonNull).findFirst().orElse(null));
 					}
 				};
