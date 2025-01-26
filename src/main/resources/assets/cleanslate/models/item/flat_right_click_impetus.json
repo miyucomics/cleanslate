@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:item/generated",
 	"textures": {
-		"layer0": "cleanslate:item/withered_slate"
+		"layer0": "cleanslate:item/flat_right_click_impetus"
 	}
 }

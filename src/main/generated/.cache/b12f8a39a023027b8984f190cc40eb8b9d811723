@@ -1,9 +1,6 @@
-// 1.20.1	2025-01-25T21:26:25.271817356	Clean Slate/Model Definitions
+// 1.20.1	2025-01-26T11:19:48.478523188	Clean Slate/Model Definitions
 3668f53db4d6392d091d8d3b08fb6bc27671df3f assets/cleanslate/blockstates/withered_slate.json
-69ef9d2f95eb195a6af2cd9d33cf4019df4b493f assets/cleanslate/models/item/flat_looking_impetus.json
 e44c44e8e6871a2544a2d1e488ae80f0ecf1b6a4 assets/cleanslate/blockstates/flat_right_click_impetus.json
-6c33065f36dc667d57c706ea590adc765429be78 assets/cleanslate/models/item/flat_redstone_impetus.json
 3c0ef97aa09c2cd7d25ba8c973c124327c3fc59c assets/cleanslate/blockstates/flat_looking_impetus.json
-08795a0aa877c721b153366ab9369d4dcef37ad9 assets/cleanslate/models/item/flat_right_click_impetus.json
 3333ea22b709ae5d7c073d0e302806a62116f2f9 assets/cleanslate/blockstates/multislate.json
 b6e6c47a47eeb0697a40638c23e0d669a873d8cb assets/cleanslate/blockstates/flat_redstone_impetus.json

@@ -5,9 +5,13 @@ import at.petrak.hexcasting.api.casting.circles.ICircleComponent
 import at.petrak.hexcasting.api.casting.circles.ICircleComponent.ControlFlow
 import at.petrak.hexcasting.api.casting.eval.env.CircleCastEnv
 import at.petrak.hexcasting.api.casting.eval.vm.CastingImage
+import at.petrak.hexcasting.common.blocks.circles.BlockEntitySlate
+import at.petrak.hexcasting.common.blocks.circles.BlockSlate
+import at.petrak.hexcasting.common.lib.HexBlocks
 import at.petrak.hexcasting.common.lib.HexItems
-import com.mojang.datafixers.util.Pair
+import miyucomics.cleanslate.inits.CleanslateBlocks
 import net.minecraft.block.*
+import net.minecraft.block.enums.WallMountLocation
 import net.minecraft.fluid.FluidState
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemPlacementContext
@@ -20,6 +24,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 import java.util.*
 
 class MultislateBlock : MultifaceGrowthBlock(Settings.copy(Blocks.DEEPSLATE_TILES).strength(4f, 4f)), ICircleComponent, Waterloggable {
@@ -84,9 +89,7 @@ class MultislateBlock : MultifaceGrowthBlock(Settings.copy(Blocks.DEEPSLATE_TILE
 		return other
 	}
 
-	override fun canEnterFromDirection(enterDir: Direction, pos: BlockPos, state: BlockState, world: ServerWorld): Boolean {
-		return true;
-	}
+	override fun canEnterFromDirection(enterDir: Direction, pos: BlockPos, state: BlockState, world: ServerWorld) = getOtherAxises(enterDir).any { hasDirection(state, it) };
 
 	override fun possibleExitDirections(pos: BlockPos, state: BlockState, world: World): EnumSet<Direction> {
 		val exits = EnumSet.noneOf(Direction::class.java)
@@ -110,5 +113,49 @@ class MultislateBlock : MultifaceGrowthBlock(Settings.copy(Blocks.DEEPSLATE_TILE
 
 	companion object {
 		private val WATERLOGGED: BooleanProperty = Properties.WATERLOGGED
+
+		@JvmStatic
+		fun replaceSlate(context: ItemPlacementContext, cir: CallbackInfoReturnable<BlockState>) {
+			val world = context.world
+			val pos = context.blockPos
+			val state = world.getBlockState(pos)
+
+			if (state.isOf(HexBlocks.SLATE)) {
+				val blockEntity = world.getBlockEntity(pos)
+				if (blockEntity is BlockEntitySlate && blockEntity.pattern != null)
+					return
+
+				val (usedDirection, multislate) = getAttachDirection(world, pos, state)
+				if (multislate == null) {
+					cir.returnValue = null
+					return
+				}
+
+				cir.returnValue = findFirstValidDirection(multislate, context.placementDirections, world, pos, usedDirection)
+				return
+			}
+
+			if (state.isOf(CleanslateBlocks.MULTISLATE_BLOCK))
+				cir.returnValue = findFirstValidDirection(state, context.placementDirections, world, pos)
+		}
+
+		private fun getAttachDirection(world: World, pos: BlockPos, state: BlockState): Pair<Direction, BlockState?> {
+			val multislateBlock = CleanslateBlocks.MULTISLATE_BLOCK.defaultState
+				.with(BlockSlate.WATERLOGGED, state.get(BlockSlate.WATERLOGGED))
+			val growthInterface = multislateBlock.block as MultifaceGrowthBlock
+
+			return when (state.get(BlockSlate.ATTACH_FACE)!!) {
+				WallMountLocation.CEILING -> Direction.UP to growthInterface.withDirection(multislateBlock, world, pos, Direction.UP)
+				WallMountLocation.FLOOR -> Direction.DOWN to growthInterface.withDirection(multislateBlock, world, pos, Direction.DOWN)
+				WallMountLocation.WALL -> {
+					val excludeDirection = state.get(BlockSlate.FACING).opposite
+					excludeDirection to growthInterface.withDirection(multislateBlock, world, pos, excludeDirection)
+				}
+			}
+		}
+
+		private fun findFirstValidDirection(multislate: BlockState, placementDirections: Array<Direction>, world: World, pos: BlockPos, exclude: Direction? = null): BlockState? {
+			return placementDirections.asSequence().filter { it != exclude }.mapNotNull { direction -> (multislate.block as? MultifaceGrowthBlock)?.withDirection(multislate, world, pos, direction) }.firstOrNull()
+		}
 	}
 }
